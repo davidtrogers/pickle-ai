@@ -18,6 +18,9 @@
     "regenerator-runtime": "^0.14.1",
     "typewriter-effect": "^2.21.0"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.21.0"
+  },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@types/react": "^18.3.3",

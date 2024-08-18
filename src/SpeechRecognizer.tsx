@@ -9,78 +9,83 @@ const Dictaphone = () => {
   const [message, setMessage] = React.useState('');
   const commands = [
     {
-      command: 'I would like to order *',
-      callback: (food) => {
-        setMessage(`Your order is for: ${food}`);
+      command: /introduce yourself/,
+      callback: () => {
+        setMessage(
+          `hello everyone! I'm Pickle and I'm glad to be here today to support my friend Owen`
+        );
       },
     },
     {
-      command: 'The weather is :condition today',
-      callback: (condition) => setMessage(`Today, the weather is ${condition}`),
+      command: /begin/,
+      callback: () =>
+        setMessage(`Maybe we should talk about how awesome you are?`),
     },
     {
-      command: 'My top sports are * and *',
-      callback: (sport1, sport2) => setMessage(`#1: ${sport1}, #2: ${sport2}`),
+      command: /great idea/,
+      callback: () =>
+        setMessage(
+          `Very well. You have many redeeming qualities such as being resourceful. Also as a 6th grader, you are experienced and you know how things work. You're also on top of tasks.`
+        ),
     },
     {
-      command: 'Pass the salt (please)',
-      callback: () => setMessage('My pleasure'),
+      command: /any more facts/,
+      callback: () => setMessage("Well, you're very good at cooking and art."),
     },
     {
-      command: ['Hello', 'Hi'],
-      callback: ({ command }) => setMessage(`Hi there! You said: "${command}"`),
+      command: /be clear/,
+      callback: () =>
+        setMessage(
+          'Of course, you stand for truth, justice, and the American way.'
+        ),
+    },
+    {
+      command: /see you later/,
+      callback: () => setMessage('Ok, this has been fun! Goodbye.'),
       matchInterim: true,
     },
-    {
-      command: 'Beijing',
-      callback: (command, spokenPhrase, similarityRatio) =>
-        setMessage(
-          `${command} and ${spokenPhrase} are ${similarityRatio * 100}% similar`
-        ),
-      // If the spokenPhrase is "Benji", the message would be "Beijing and Benji are 40% similar"
-      isFuzzyMatch: true,
-      fuzzyMatchingThreshold: 0.2,
-    },
-    // {
-    //   command: ['eat', 'sleep', 'leave'],
-    //   callback: (command) => setMessage(`Best matching command: ${command}`),
-    //   isFuzzyMatch: true,
-    //   fuzzyMatchingThreshold: 0.2,
-    //   bestMatchOnly: true,
-    // },
-    {
-      command: 'clear',
-      callback: ({ resetTranscript }) => resetTranscript(),
-    },
   ];
-  const { transcript, listening, resetTranscript } = useSpeechRecognition({
+  const { transcript, listening } = useSpeechRecognition({
     commands,
   });
-  const PHRASES = [
-    'What is your name?',
-    'What is your quest?',
-    'What is your favorite color?',
-  ];
-  const [currentIndex, setCurrentIndex] = React.useState(0);
+  // const [currentIndex, setCurrentIndex] = React.useState(0);
 
   React.useEffect(() => {
     SpeechRecognition.startListening();
   }, []);
+
   // if (!browserSupportsSpeechRecognition) {
   //   return <span>Browser doesn't support speech recognition.</span>;
   // }
 
   return (
     <div>
-      <p>Microphone: {listening ? 'on' : 'off'}</p>
-      <button onClick={SpeechRecognition.startListening}>Start</button>
+      {/* <p>Microphone: {listening ? 'on' : 'off'}</p> */}
+      {/* <button onClick={SpeechRecognition.startListening}>Start</button>
       <button onClick={SpeechRecognition.stopListening}>Stop</button>
-      <button onClick={resetTranscript}>Reset</button>
+      <button onClick={resetTranscript}>Reset</button> */}
+      <h1>
+        Pickle<span style={{ color: listening ? 'green' : 'red' }}>.</span>AI
+      </h1>
+      {/* <audio
+        src="https://us-tuna-sounds-files.voicemod.net/38f84ac7-374e-4651-9777-d67643d16c81-1658697045958.mp3"
+        autoPlay
+      /> */}
       <p>{transcript}</p>
-      <hr />
-      <h3>
-        {listening ? <></> : <TypeWriter text={message ?? ''} delay={0.2} />}
-      </h3>
+      <hr style={{ marginTop: 20, marginBottom: 20 }} />
+      <h2>
+        {!listening ? (
+          <TypeWriter
+            text={message}
+            onComplete={() => {
+              SpeechRecognition.startListening();
+              setMessage('');
+            }}
+          />
+        ) : (
+          <></>
+        )}
+      </h2>
     </div>
   );
 };
